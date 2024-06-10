@@ -1,7 +1,94 @@
+import { useEffect, useState } from "react";
 import "./App.scss";
+import WeatherDisplay from "./WeatherDisplay/WeatherDisplay";
+import { Coordinates } from "./types/UserLocation";
+import { WeatherInfo } from "./types/WeatherInfo";
 
 function App() {
-  return <h1>Weather api</h1>;
+  const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
+  const [weatherInfo, setWeatherInfo] = useState<WeatherInfo>({
+    location: "",
+    country: "",
+    temperature: 0,
+    feelsLike: 0,
+    condition: "",
+    wind: 0,
+    time: "",
+    sunrise: "",
+    sunset: "",
+  });
+
+  const getUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+
+          setUserLocation({ latitude, longitude });
+          getWeather(latitude, longitude);
+        },
+        (error) => {
+          console.log("Error getting user location: ", error);
+        }
+      );
+    } else {
+      console.log("Geolocation is not supported by this browser");
+    }
+  };
+
+  const getWeather = async (lat: number, long: number) => {
+    const url = `http://api.weatherapi.com/v1/forecast.json?key=a2bcc37b2425486998b155054240506&q=${lat},${long}&days=1&aqi=no&alerts=no`;
+    const result = await fetch(url);
+    const data = await result.json();
+    console.log(data);
+
+    const {
+      location: { name, country, localtime },
+      current: {
+        condition: { text: condition } = "Loading…",
+        temp_c,
+        feelslike_c,
+        wind_mph,
+      },
+      forecast: {
+        forecastday: [
+          {
+            astro: { sunrise, sunset },
+          },
+        ],
+      },
+    } = data;
+
+    setWeatherInfo({
+      location: name,
+      country: country,
+      temperature: temp_c,
+      feelsLike: feelslike_c,
+      condition: condition,
+      wind: wind_mph,
+      time: localtime,
+      sunrise: sunrise,
+      sunset: sunset,
+    });
+  };
+
+  useEffect(() => {
+    getUserLocation();
+  }, []);
+
+  return (
+    <div>
+      {userLocation && (
+        <div>
+          <p>Latitude: {userLocation.latitude}</p>
+          <p>Latitude: {userLocation.longitude}</p>
+        </div>
+      )}
+      <h1>Weather</h1>
+
+      <WeatherDisplay weather={weatherInfo} />
+    </div>
+  );
 }
 
 export default App;
