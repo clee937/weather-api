@@ -1,19 +1,41 @@
 import { useEffect, useState } from "react";
 import "./App.scss";
 import WeatherDisplay from "./WeatherDisplay/WeatherDisplay";
-import { Coordinates } from "./types/UserLocation";
+// import { Coordinates } from "./types/UserLocation";
 import { WeatherInfo } from "./types/WeatherInfo";
+import sunrise from "./assets/images/sunrise.png";
+import sun from "./assets/images/sun.png";
+import moon from "./assets/images/moon.png";
+import Greeting from "./Greeting/Greeting";
+
+const getGreeting = (hour: number) => {
+  if (hour < 12) {
+    return "Good Morning";
+  }
+  if (hour < 18) {
+    return "Good Afternoon";
+  }
+  return "Good Evening";
+};
+
+const getGreetingImage = (hour: number) => {
+  if (hour < 12) {
+    return sunrise;
+  }
+  if (hour < 18) {
+    return sun;
+  }
+  return moon;
+};
 
 function App() {
-  const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
+  // const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
   const [weatherInfo, setWeatherInfo] = useState<WeatherInfo>({
     location: "",
-    country: "",
     temperature: 0,
     feelsLike: 0,
     condition: "",
     wind: 0,
-    time: "",
     sunrise: "",
     sunset: "",
   });
@@ -24,7 +46,7 @@ function App() {
         (position) => {
           const { latitude, longitude } = position.coords;
 
-          setUserLocation({ latitude, longitude });
+          // setUserLocation({ latitude, longitude });
           getWeather(latitude, longitude);
         },
         (error) => {
@@ -43,7 +65,7 @@ function App() {
     console.log(data);
 
     const {
-      location: { name, country, localtime },
+      location: { name },
       current: {
         condition: { text: condition } = "Loading…",
         temp_c,
@@ -61,12 +83,10 @@ function App() {
 
     setWeatherInfo({
       location: name,
-      country: country,
       temperature: temp_c,
       feelsLike: feelslike_c,
       condition: condition,
       wind: wind_mph,
-      time: localtime,
       sunrise: sunrise,
       sunset: sunset,
     });
@@ -76,16 +96,25 @@ function App() {
     getUserLocation();
   }, []);
 
+  const date = new Date();
+
+  const currentHour = new Date().getHours();
+  console.log({ date });
+  const greeting = getGreeting(currentHour);
+  const greetingImage = getGreetingImage(currentHour);
+
   return (
-    <div>
+    <div className="app">
+      {/* <img src={greetingImage} alt="current time icon" />
+      <h1>{greeting}</h1>
       {userLocation && (
         <div>
           <p>Latitude: {userLocation.latitude}</p>
           <p>Latitude: {userLocation.longitude}</p>
         </div>
       )}
-      <h1>Weather</h1>
-
+      <h1></h1> */}
+      <Greeting greeting={greeting} greetingImage={greetingImage} />
       <WeatherDisplay weather={weatherInfo} />
     </div>
   );
