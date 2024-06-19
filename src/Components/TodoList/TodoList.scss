@@ -1,0 +1,26 @@
+@use "./../../styles/variables" as *;
+
+.todo-list {
+  box-shadow: 0 0 10px 3px $border-yellow inset, 0 0 10px 3px $border-yellow;
+  border: 2px white;
+  border-style: solid solid none;
+  min-width: 320px;
+  padding: 1.5rem;
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+
+  &__heading {
+    width: 300px;
+    margin: 0;
+    font-weight: 700;
+  }
+}
+
+@media screen and (min-width: $desktop) {
+  .todo-list {
+    width: 320px;
+    border-radius: 0 0 20px 20px;
+  }
+}

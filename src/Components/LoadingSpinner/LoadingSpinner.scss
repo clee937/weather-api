@@ -1,0 +1,30 @@
+@use "../../styles/variables" as *;
+
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 35px;
+  font-family: $primary-font, arial, sans-serif;
+  color: $primary-font-color;
+  gap: 20px;
+
+  &__circle {
+    width: 50px;
+    height: 50px;
+    border: 5px solid greenyellow;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 2s infinite linear;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

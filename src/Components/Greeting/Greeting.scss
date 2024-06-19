@@ -1,0 +1,30 @@
+@use "./../../styles/variables" as *;
+
+.greeting {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid white;
+  box-shadow: 0 0 10px 3px $border-red inset, 0 0 10px 3px $border-red;
+  min-width: 320px;
+  padding: 0.25rem 1.5rem 0.25rem 1.5rem;
+  margin: 0 auto;
+
+  &__greeting {
+    font-family: "Pacifico", cursive;
+    font-size: 1.8rem;
+  }
+
+  &__image {
+    width: 60px;
+    margin-right: 15px;
+  }
+}
+
+@media screen and (min-width: $desktop) {
+  .greeting {
+    width: 320px;
+    border-radius: 20px 20px 0 0;
+    padding: 1rem 1.5rem 1rem 1.5rem;
+  }
+}
